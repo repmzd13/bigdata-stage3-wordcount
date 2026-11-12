@@ -16,14 +16,26 @@
 
 # MAGIC %md
 # MAGIC ## 0. Setup
-# MAGIC Before running the notebook, create the volume and upload the file:
-# MAGIC 1. Run the next cell to create the volume `workspace.default.bigdata`.
-# MAGIC 2. Go to **Catalog > workspace > default > bigdata** and click **Upload to this volume**. Select `Annex_1_Aplication.txt`.
+# MAGIC 1. Create the Unity Catalog volume `workspace.default.bigdata`, which plays the role of the HDFS input directory.
+# MAGIC 2. Copy `Annex_1_Aplication.txt` (the dataset provided in the virtual campus) into the volume. The file is downloaded from the project repository; it can also be uploaded manually with **Catalog > workspace > default > bigdata > Upload to this volume**.
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC CREATE VOLUME IF NOT EXISTS workspace.default.bigdata;
+
+# COMMAND ----------
+
+import os
+import urllib.request
+
+source_url = "https://raw.githubusercontent.com/repmzd13/bigdata-stage3-wordcount/main/Annex_1_Aplication.txt"
+target_file = "/Volumes/workspace/default/bigdata/Annex_1_Aplication.txt"
+
+if not os.path.exists(target_file):
+    urllib.request.urlretrieve(source_url, target_file)
+
+print("File in volume:", target_file, "-", os.path.getsize(target_file), "bytes")
 
 # COMMAND ----------
 
